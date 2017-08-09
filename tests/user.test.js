@@ -1,6 +1,6 @@
 
 var User = require('../models/User')
-var UserControllers = require('../controllers/userControllers.js')
+var usersControllers = require('../controllers/usersControllers.js')
 
 describe('Users', function () {
     test('email is required', function () {
@@ -40,7 +40,7 @@ describe('Users', function () {
             }
         }
         var res = {}
-        userControllers.login(req, res)
-        expect(spy),toHaveBeenCalledWith(req.body)
+        usersControllers.login(req, res)
+        expect(spy).toHaveBeenCalledWith(req.body)
     })
 })

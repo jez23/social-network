@@ -19,8 +19,11 @@ var UserSchema = new mongoose.Schema({
 UserSchema.statics = { 
     login: function (user, callback) {
       return User.findOne(user, callback)
-    }
-}
+    },
+    register: function (user, callback) {
+        const newUser = new this(user)
+        newUser.save(callback)
+ }}
 
 
 

@@ -1,8 +1,23 @@
 
 var User = require('../models/User')
 var usersControllers = require('../controllers/usersControllers.js')
+var path = require('path')
+require('dotenv').config({path: path.join(__dirname, '../settings.env')})
+var mongoose = require('mongoose')
 
 describe('Users', function () {
+    var user = {
+        emailAddress: "hello@world.com",
+        password: "password123"
+        }
+    beforeAll(function() {
+        mongoose.connect(process.env.DATABASE_URL_TEST, {useMongoClient: true}, function(error){
+            console.log(error)
+        })
+    })
+    afterAll(function() {
+        mongoose.disconnect()
+    })
     test('email is required', function () {
         var user = new User()
         var error = user.validateSync()
@@ -23,10 +38,6 @@ describe('Users', function () {
     })
      test('Login request user with matching email address and password', function () {
         var spy = spyOn(User, 'findOne')
-        var user = {
-            emailAddress: "hello@world.com",
-            password: "password123"
-        }
         var callback = jest.fn()
         User.login(user, callback)
         expect(spy).toHaveBeenCalledWith(user, callback)
@@ -42,5 +53,17 @@ describe('Users', function () {
         var res = {}
         usersControllers.login(req, res)
         expect(spy).toHaveBeenCalledWith(req.body)
+    })
+     test('Register user with matching username and password', function (done) {
+         console.log(user)
+        var callback = function(){
+            User.findOne({}, function (error, result) {
+                expect(error).not.toBeTruthy()
+                expect(result.emailAddress).toBe(user.emailAddress)
+                expect(result.password).toBe(user.password)
+                done()
+            })
+        }
+            User.register(user, callback)
     })
 })

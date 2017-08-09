@@ -9,7 +9,13 @@ describe('Users', function () {
     var user = {
         emailAddress: "hello@world.com",
         password: "password123"
-        }
+    }
+    beforeEach(function(done){
+        User.remove({}, function(){
+            done()
+        })
+    })
+
     beforeAll(function() {
         mongoose.connect(process.env.DATABASE_URL_TEST, {useMongoClient: true}, function(error){
             console.log(error)
@@ -54,7 +60,7 @@ describe('Users', function () {
         usersControllers.login(req, res)
         expect(spy).toHaveBeenCalledWith(req.body)
     })
-     test('Register user with matching username and password', function (done) {
+    test('Register user with matching username and password', function (done) {
          console.log(user)
         var callback = function(){
             User.findOne({}, function (error, result) {
@@ -65,5 +71,34 @@ describe('Users', function () {
             })
         }
             User.register(user, callback)
+    })
+    test('Register static is called when we post to the register route', function () {
+        var spy = spyOn(User, 'register')
+        var req = {
+            body: {
+                emailAddress: 'hello@world.com',
+                password: 'password123',
+                confirmPassword: 'password123'
+            }
+        }
+        var res = {}
+        usersControllers.register(req, res)
+        expect(spy).toHaveBeenCalledWith(req.body)
+    })
+    test('Cannot login if not registered', function (done) {
+        User.login(user, function(error, result) {
+            expect(error).not.toBeTruthy()
+            expect(result).not.toBeTruthy()
+            done()
+        })
+    })
+    test('Can login if registered', function (done) {
+        User.register(user, function(error, result) {
+        User.login(user, function(error, result) {
+            expect(error).not.toBeTruthy()
+            expect(result).toBeTruthy()
+            done()
+            })
+        })
     })
 })

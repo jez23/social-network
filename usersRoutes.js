@@ -12,6 +12,15 @@ function usersRoutes(app){
     app.post('/register', urlencodedParser, usersControllers.register, function (req, res) {
         res.redirect('/')
     })
+    app.get('/login', function (req, res) {
+        res.render('login', { currentUser: req.session.user })
+    })
+    app.post('/login', urlencodedParser, usersControllers.login, function (req, res) {
+        res.redirect('/')
+    })
+   app.get('/logout', usersControllers.logout, function (req, res) {
+         res.redirect('/')
+    })
 }
 
 module.exports('usersRoutes')

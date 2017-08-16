@@ -1,12 +1,7 @@
 var path = require('path')
-var userRoutes = require('usersRoutes.js')
-
+var userRoutes = require('./usersRoutes.js')
 var sessions = require('client-sessions')
-app.use(sessions({
-  cookieName: 'session',
-  secret: '123jez123'
-}))
-
+var mongoose = require('mongoose')
 require('dotenv').config({
   path: path.join(__dirname, 'settings.env')
 })
@@ -22,6 +17,11 @@ var exphbs = require('express-handlebars')
 
 var app = express()
 
+app.use(sessions({
+  cookieName: 'session',
+  secret: '123jez123'
+}))
+
 app.engine('.hbs', exphbs({
   extname: '.hbs',
   defaultLayout: 'main'
@@ -30,5 +30,5 @@ app.set('view engine', '.hbs')
 
 app.use(express.static('public'))
 
-usersRoutes(app)
+userRoutes(app)
 app.listen(3000)

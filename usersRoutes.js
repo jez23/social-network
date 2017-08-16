@@ -1,5 +1,5 @@
 var bodyParser = require('body-parser')
-var usersControllers = require('usersControllers.js')
+var usersControllers = require('./controllers/usersControllers.js')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 function usersRoutes(app){
@@ -23,5 +23,5 @@ function usersRoutes(app){
     })
 }
 
-module.exports('usersRoutes')
+module.exports = usersRoutes
 

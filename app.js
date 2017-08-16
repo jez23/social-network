@@ -1,4 +1,11 @@
 var path = require('path')
+var userRoutes = require('usersRoutes.js')
+
+var sessions = require('client-sessions')
+app.use(sessions({
+  cookieName: 'session',
+  secret: '123jez123'
+}))
 
 require('dotenv').config({
   path: path.join(__dirname, 'settings.env')
@@ -23,4 +30,5 @@ app.set('view engine', '.hbs')
 
 app.use(express.static('public'))
 
+usersRoutes(app)
 app.listen(3000)

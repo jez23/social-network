@@ -5,6 +5,10 @@ var path = require('path')
 require('dotenv').config({path: path.join(__dirname, '../settings.env')})
 var mongoose = require('mongoose')
 
+
+
+
+
 describe('Users', function () {
     var user = {
         emailAddress: "hello@world.com",
@@ -48,20 +52,22 @@ describe('Users', function () {
         User.login(user, callback)
         expect(spy).toHaveBeenCalledWith(user, callback)
     })
-    test('Logic static is called when we post to the login route', function () {
-        var spy = spyOn(User, 'login')
-        var req = {
-            body: {
-                emailAddress: "hello@world.com",
-                password: "password123"
+    test('register static is called when we post to the register route', function () {
+         var spy = spyOn(User, 'register')
+         var req = {
+             body: {
+                emailAddress: 'hello@world.com',
+                password: 'password123',
+                confirmPassword: 'password123'
             }
         }
-        var res = {}
-        usersControllers.login(req, res)
-        expect(spy).toHaveBeenCalledWith(req.body)
+         var res = {}
+         var callback = jest.fn()
+         usersControllers.register(req, res, callback)
+        expect(spy).toHaveBeenCalledWith(req.body, callback)
     })
     test('Register user with matching username and password', function (done) {
-         console.log(user)
+        console.log(user)
         var callback = function(){
             User.findOne({}, function (error, result) {
                 expect(error).not.toBeTruthy()
@@ -70,9 +76,9 @@ describe('Users', function () {
                 done()
             })
         }
-            User.register(user, callback)
+        User.register(user, callback)
     })
-    test('Register static is called when we post to the register route', function () {
+   test('register static is called when we post to the register route', function () {
         var spy = spyOn(User, 'register')
         var req = {
             body: {
@@ -82,10 +88,11 @@ describe('Users', function () {
             }
         }
         var res = {}
-        usersControllers.register(req, res)
-        expect(spy).toHaveBeenCalledWith(req.body)
+        var callback = jest.fn()
+        usersControllers.register(req, res, callback)
+        expect(spy).toHaveBeenCalledWith(req.body, callback)
     })
-    test('Cannot login if not registered', function (done) {
+    test('can\'t login if not registered', function (done) {
         User.login(user, function(error, result) {
             expect(error).not.toBeTruthy()
             expect(result).not.toBeTruthy()
@@ -101,4 +108,21 @@ describe('Users', function () {
             })
         })
     })
+   test('login static creates a session', function (done) {
+  var req = {
+    body: {
+      emailAddress: 'hello@world.com',
+      password: 'password123'
+    },
+    session: {}
+  }
+  var res = {}
+
+  User.register(req.body, function (error, result) {
+    usersControllers.login(req, res, function () {
+      expect(req.session.user).not.toBeUndefined()
+      done()
+    })
+  })
 })
+});

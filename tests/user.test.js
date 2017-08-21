@@ -99,15 +99,21 @@ describe('Users', function () {
             done()
         })
     })
-    test('Can login if registered', function (done) {
-        User.register(user, function(error, result) {
-        User.login(user, function(error, result) {
-            expect(error).not.toBeTruthy()
-            expect(result).toBeTruthy()
-            done()
-            })
-        })
+   test('can login if registered', function (done) {
+    var user = {
+      emailAddress: 'hello@world.com',
+      password: 'password123'
+    }
+    var userClone = Object.assign({}, user)
+
+    User.register(user, function () {
+      User.login(userClone, function (error, result) {
+        expect(error).not.toBeTruthy()
+        expect(result).toBeTruthy()
+        done()
+      })
     })
+  })
    test('login static creates a session', function (done) {
   var req = {
     body: {
@@ -122,6 +128,21 @@ describe('Users', function () {
     usersControllers.login(req, res, function () {
       expect(req.session.user).not.toBeUndefined()
       done()
+    })
+  })
+})
+
+test('can edit profile', function () {
+  var user = {
+    emailAddress: 'email@example.com',
+    password: 'password123'
+  }
+
+  User.register(user, function () {
+    User.editProfile(user, function (error, result) {
+      expect(error).toBeFalsy()
+      expect(result).toBeTruthy()
+
     })
   })
 })

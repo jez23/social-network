@@ -1,0 +1,9 @@
+<ul>
+  {{#each users}}
+    <li><a href="/profiles/{{_id}}">{{emailAddress}}</a></li>
+  {{/each}}
+</ul>
+<div>
+  <strong>Bio</strong> {{user.bio}}
+  <strong>Home Town</strong> {{user.homeTown}}
+</div>

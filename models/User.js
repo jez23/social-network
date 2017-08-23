@@ -41,8 +41,8 @@ UserSchema.statics = {
             $set: {
             bio: user.bio,
             homeTown: user.homeTown
-            }
-        }, callback)
+        }
+      }, callback)
     }
 }
 

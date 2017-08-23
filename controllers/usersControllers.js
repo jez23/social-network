@@ -16,7 +16,15 @@ var usersControllers= {
     logout: function (req, res, next) {
          req.session.user = false
         next()
-    }   
+    },
+    editProfile: function (req, res, next) {
+  const user = {
+    _id: req.session.user._id,
+    bio: req.body.bio,
+    homeTown: req.body.homeTown
+  }
+  User.editProfile(user, next)
+} 
 
 }
 
